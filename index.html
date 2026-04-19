@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #e0e0e0;
+      font-family: Arial;
+    }
+
+    .calc {
+      background: #222;
+      border-radius: 16px;
+      padding: 20px;
+      width: 260px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #display {
+      background: #111;
+      color: #fff;
+      font-size: 32px;
+      text-align: right;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      min-height: 60px;
+      word-break: break-all;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 16px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: Arial;
+      transition: opacity 0.15s;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    button:active {
+      opacity: 0.7;
+    }
+
+    .num { background: #444; color: #fff; }
+    .op  { background: #f90; color: #fff; }
+    .ac  { background: #a00; color: #fff; }
+    .eq  { background: #0a0; color: #fff; grid-column: span 2; }
+  </style>
+</head>
+
+<body>
+
+<div class="calc">
+  <h2>Calculator</h2>
+
+  <div id="display">0</div>
+
+  <div class="buttons">
+    <button class="ac" onclick="clearDisplay()">AC</button>
+    <button class="op" onclick="del()">⌫</button>
+    <button class="op" onclick="press('%')">%</button>
+    <button class="op" onclick="press('/')">÷</button>
+
+    <button class="num" onclick="press('7')">7</button>
+    <button class="num" onclick="press('8')">8</button>
+    <button class="num" onclick="press('9')">9</button>
+    <button class="op" onclick="press('*')">×</button>
+
+    <button class="num" onclick="press('4')">4</button>
+    <button class="num" onclick="press('5')">5</button>
+    <button class="num" onclick="press('6')">6</button>
+    <button class="op" onclick="press('-')">−</button>
+
+    <button class="num" onclick="press('1')">1</button>
+    <button class="num" onclick="press('2')">2</button>
+    <button class="num" onclick="press('3')">3</button>
+    <button class="op" onclick="press('+')">+</button>
+
+    <button class="num" onclick="press('0')">0</button>
+    <button class="num" onclick="press('.')">.</button>
+    <button class="eq" onclick="calculate()">=</button>
+  </div>
+</div>
+
+<script>
+  let expr = '';
+  const display = document.getElementById('display');
+
+  function press(val) {
+    const last = expr.slice(-1);
+
+    // Prevent multiple operators
+    if ('+-*/.%'.includes(val) && '+-*/.%'.includes(last)) {
+      return;
+    }
+
+    expr += val;
+    display.textContent = expr;
+  }
+
+  function clearDisplay() {
+    expr = '';
+    display.textContent = '0';
+  }
+
+  function del() {
+    expr = expr.slice(0, -1);
+    display.textContent = expr || '0';
+  }
+
+  function calculate() {
+    if (!expr) return;
+
+    try {
+      expr = String(eval(expr));
+      display.textContent = expr;
+    } catch {
+      display.textContent = 'Error';
+      expr = '';
+    }
+  }
+
+  // Keyboard support
+  document.addEventListener('keydown', (e) => {
+    if ('0123456789+-*/.%'.includes(e.key)) press(e.key);
+    else if (e.key === 'Enter') calculate();
+    else if (e.key === 'Backspace') del();
+    else if (e.key === 'Escape') clearDisplay();
+  });
+</script>
+
+</body>
+</html>
